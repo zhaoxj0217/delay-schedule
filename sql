@@ -1,0 +1,86 @@
+
+CREATE TABLE `t_delay_schedule_info` (
+  `ID` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '主键Id',
+  `REQUEST_SOURCE` varchar(50) NOT NULL  DEFAULT '' COMMENT '请求来源',
+  `SCHEDULE_DES` varchar(200) NOT NULL  DEFAULT ''  COMMENT '任务描述',
+  `REQUEST_SEQNO` varchar(50) NOT NULL  DEFAULT '' COMMENT '请求的外部的类主键比如orderId 之类的',
+  `DELAY_GROUP` varchar(50) NOT NULL  DEFAULT '' COMMENT '延时任务分组',
+  `INVOKE_TYPE` smallint(1) NOT NULL  DEFAULT 0 COMMENT '发起类型 1dubbo,2 http,3 rabbitMQ',
+  `CALLBACK_TYPE` smallint(1) NOT NULL  DEFAULT 0 COMMENT '回调类型 1dubbo,2 http,3 rabbitMQ',
+  `SCHEDULE_STATUS` int(10) NOT NULL DEFAULT -1  COMMENT '任务状态：0初始化,100队列中,101调用中,
+    200调用成功,201任务正常结束,300调用失败,301异常结束,302超时结束,',
+  `CALL_COUNTS` int(10) NOT NULL DEFAULT 0  COMMENT '回调次数',
+  `REQUEST_HASH` varchar(200) NOT NULL  DEFAULT ''  COMMENT '任务签名',
+  `DELAY_SCHEDULE_TIME` datetime DEFAULT NULL COMMENT '要求调用时间',
+  `CREATED_TIME` datetime DEFAULT NULL COMMENT '创建时间',
+  `UPDATE_TIME` datetime DEFAULT NULL  COMMENT '最后修改时间',
+  `DELETE_FLAG` smallint(1) NOT NULL DEFAULT 0 COMMENT '删除标记：0否，1是',
+  PRIMARY KEY (`ID`),
+  KEY `idx_DELAY_SCHEDULE_TIME` (`DELAY_SCHEDULE_TIME`),
+  KEY `idx_SEQNO` (`REQUEST_SEQNO`) 
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='延时任务信息表';
+
+
+CREATE TABLE `t_delay_schedule_dubbo_info_details` (
+  `ID` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '主键Id',
+  `INFO_ID` bigint(19) NOT NULL  DEFAULT 0 COMMENT '信息Id',
+  `GROUP` varchar(50) NOT NULL  DEFAULT '' COMMENT '分组',
+  `VERSION` varchar(50) NOT NULL  DEFAULT '' COMMENT '接口version',
+  `INTERFACE_NAME` varchar(200) NOT NULL  DEFAULT '' COMMENT '接口',
+  `METHOD_NAME` varchar(200) NOT NULL  DEFAULT '' COMMENT '方法',
+  `PARAM_TYPE` varchar(500) NOT NULL  DEFAULT '' COMMENT '参数类型',
+  `PARAM_VALUE` varchar(500) NOT NULL  DEFAULT '' COMMENT '参数值',
+  `CREATED_TIME` datetime DEFAULT NULL COMMENT '创建时间',
+  `UPDATE_TIME` datetime DEFAULT NULL  COMMENT '最后修改时间',
+  `DELETE_FLAG` smallint(1) NOT NULL DEFAULT 0 COMMENT '删除标记：0否，1是',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='dubbo延时任务详情表';
+
+
+
+
+
+CREATE TABLE `t_delay_schedule_http_info_details` (
+  `ID` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '主键Id',
+  `INFO_ID` bigint(19) NOT NULL  DEFAULT 0 COMMENT '信息Id',
+  `CALLBACK_ULR` varchar(200) NOT NULL  DEFAULT '' COMMENT '请求地址',
+  `HTTP_METHOD` smallint(1) NOT NULL DEFAULT 0 COMMENT ' 1GET ,2POST',
+  `PARAM_VALUE` varchar(500) NOT NULL  DEFAULT '' COMMENT '参数值',
+  `CREATED_TIME` datetime DEFAULT NULL COMMENT '创建时间',
+  `UPDATE_TIME` datetime DEFAULT NULL  COMMENT '最后修改时间',
+  `DELETE_FLAG` smallint(1) NOT NULL DEFAULT 0 COMMENT '删除标记：0否，1是',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='http延时任务详情表';
+
+
+CREATE TABLE `t_delay_schedule_rabbitmq_info_details` (
+  `ID` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '主键Id',
+  `INFO_ID` bigint(19) NOT NULL DEFAULT 0 COMMENT '信息Id',
+  `topic` varchar(200) NOT NULL  DEFAULT '' COMMENT '消息topic',
+  `PARAM_VALUE` varchar(500) NOT NULL  DEFAULT '' COMMENT '参数值',
+  `CREATED_TIME` datetime DEFAULT NULL COMMENT '创建时间',
+  `UPDATE_TIME` datetime DEFAULT NULL  COMMENT '最后修改时间',
+  `DELETE_FLAG` smallint(1) NOT NULL DEFAULT 0 COMMENT '删除标记：0否，1是',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='rabbitmq延时任务详情表';
+
+
+
+
+
+
+
+CREATE TABLE `t_delay_schedule_recall_log` (
+  `ID` bigint(19) NOT NULL AUTO_INCREMENT COMMENT '主键Id',
+  `INFO_ID` bigint(19) NOT NULL DEFAULT 0 COMMENT '信息Id',
+  `INFO_DETAILS_ID` bigint(19) NOT NULL DEFAULT 0 COMMENT '信息详情Id',
+  `RECALL_REQUEST` varchar(500) NOT NULL  DEFAULT '' COMMENT '请求',
+  `RECALL_RESULT` varchar(500) NOT NULL  DEFAULT '' COMMENT '返回',
+  `COST_TIME` bigint(19) NOT NULL  DEFAULT  0 COMMENT '消耗时间',
+  `CREATED_TIME` datetime DEFAULT NULL COMMENT '创建时间',
+  `UPDATE_TIME` datetime DEFAULT NULL  COMMENT '最后修改时间',
+  `DELETE_FLAG` smallint(1) NOT NULL DEFAULT 0 COMMENT '删除标记：0否，1是',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT='延迟任务调用记录';
+
+
